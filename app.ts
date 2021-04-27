@@ -2,9 +2,10 @@ import express from 'express'
 import adminRoutes from './routes/admin'
 import shopRoutes from './routes/shop'
 import path from 'path'
+import errorController from './controllers/404'
 
 const app = express()
-app.set('view engine','pug')
+app.set('view engine','ejs')
 app.set('views','views')
 
 app.use(express.json())
@@ -13,11 +14,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
 // /admin/XXXXX
-app.use('/admin',adminRoutes.router)
+app.use('/admin',adminRoutes)
 app.use(shopRoutes)
 
-app.use((req, res, next)=>{
-res.status(404).sendFile(path.join(__dirname,'views','404.ejs'))
-})
+app.use(errorController)
 
 app.listen(3001)
